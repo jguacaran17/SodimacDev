@@ -1,0 +1,3 @@
+FirstName,LastName,Alias,Email,UserName,CommunityNickname,Country,NroDocumentoDeIdentidad__c,TimeZoneSidKey,LocaleSidKey,EmailEncodingKey,LanguageLocaleKey,XS_CentroDeCosto__c,XS_AreaDelUsuario__c,ProfileId
+Test,User,duser,tuser@test.com,testuser.load@test.load.sodimac.com,test2,CL,22333889-5,America/Santiago,es_CL,ISO-8859-1,es_CL,40,SAC,00e55000000cUI3AAM
+Test,User,kuser,tuser@test.com,dumytestuser.load@test.load.sodimac.com,test1,CL,19199199-0,America/Santiago,es_CL,ISO-8859-1,es_CL,40,SAC,00e55000000cUI3AAM

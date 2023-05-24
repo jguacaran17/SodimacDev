@@ -1,0 +1,276 @@
+<!--
+*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 16/03/2021
+Description  : Lightning component - 360 view of a client: Detail of a Suproject
+History      : CMRSC-4875
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Rodrigo Salinas Oye			RSO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      RSO			16/03/2021		initial version
+********************************************************************************/
+-->
+<aura:component implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,lightning:hasPageReference" access="global">
+    <!--Declare Attributes received as Parameter-->
+    <aura:attribute name="objDataComponent" type="Object" default="" description="Local Attribute. Object with the container for Products Data"/>
+    <aura:attribute name="strReserveNumber" type="String" default="" description="Param passed. Reserve Number selected to show"/>
+    <aura:attribute name="labelObject" type="Object" description="Param passed. Contains all labels required by the component to show Detail"/>
+
+    <!--Handler -->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change" value="{!v.strReserveNumber}" action="{!c.doInit}"/>
+
+    <!-- GRID -->
+    <div class="slds-grid slds-gutters_direct slds-wrap">
+
+        <!-- GRID Header Section-->
+        <div class="slds-col slds-size_12-of-12">
+            <span>
+                <!-- header -->
+                <h4 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small" 
+                            title="Section Title">{! v.labelObject.reserve.detail_address }</span>
+                </h4>
+            </span>
+        </div>
+        <!-- GRID Header Section-->
+
+        <!-- GRID Fields Section-->
+        <div class="slds-col slds-size_12-of-12">
+            <div class="slds-grid slds-gutters_direct-large slds-wrap ">
+                <div class="slds-col slds-size_12-of-12 slds-order_1">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_DireccionCalle__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_DireccionCalle__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_2">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_DireccionReferencia__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_DireccionReferencia__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_3">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_DireccionSubarea__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_DireccionSubarea__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_4">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_DireccionLocalidad__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_DireccionLocalidad__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_5">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_DireccionArea__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_DireccionArea__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- GRID Fields Section-->
+
+        <!-- GRID Header Section-->
+        <div class="slds-col slds-size_12-of-12">
+            <span>
+                <!-- header -->
+                <h4 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small" 
+                            title="Section Title">{! v.labelObject.reserve.detail_data }</span>
+                </h4>
+            </span>
+        </div>
+        <!-- GRID Header Section-->
+
+        <!-- GRID Fields Section-->
+        <div class="slds-col slds-size_12-of-12">
+            <div class="slds-grid slds-gutters_direct-large slds-wrap">
+                <div class="slds-col slds-size_6-of-12 slds-order_1">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.Name.label}" 
+                                            value="{!v.objDataComponent.objReserve.Name}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_2">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_DocumentoAsociado__c.label}" 
+                                            value="{!v.objDataComponent.objAsocDoc.Name}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_3">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_TipoCanasto__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_TipoCanasto__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_4">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_Servicio__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_Servicio__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_5">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_Estado__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_Estado__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_6">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_Contratista__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_Contratista__c}"
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_7">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_TiendaQueVende__c.label}" 
+                                            value="{!v.objDataComponent.objShopThatSell.Name}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_8">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_CreadorOrden__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_CreadorOrden__c}"
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_9">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_TipoDocumentoDeVenta__c.label}" 
+                                            value="{!v.objDataComponent.objSellDoc.SOD_XS_TipoDeDdocumento__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_10">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_DocumentoDeVenta__c.label}" 
+                                            value="{!v.objDataComponent.objSellDoc.Name}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- GRID Form Section-->
+
+        <!-- GRID Header Section-->
+        <div class="slds-col slds-size_12-of-12">
+            <span>
+                <!-- header -->
+                <h4 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small" 
+                            title="Section Title">{! v.labelObject.reserve.detail_section3 }</span>
+                </h4>
+            </span>
+        </div>
+        <!-- GRID Header Section-->
+
+        <!-- GRID Fields Section-->
+        <div class="slds-col slds-size_12-of-12">
+            <div class="slds-grid slds-gutters_direct-large slds-wrap">
+                <div class="slds-col slds-size_6-of-12 slds-order_11">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_FechaDeCotizacion__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_FechaDeCotizacion__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_12">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_FechaPagoManual__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_FechaPagoManual__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_13">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_FechaOrden__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_FechaOrden__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_14">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_FechaTrabajo__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_FechaTrabajo__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+                <div class="slds-col slds-size_6-of-12 slds-order_15">
+                    <span>
+                        <lightning:input type="number" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_FechaTerminacion__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_FechaTerminacion__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- GRID Form Section-->
+
+        <!-- GRID Header Section-->
+        <div class="slds-col slds-size_12-of-12">
+            <span>
+                <!-- header -->
+                <h4 class="slds-section__title slds-theme_shade">
+                    <span class="slds-truncate slds-p-horizontal_small" 
+                            title="Section Title">{! v.labelObject.reserve.detail_section4 }</span>
+                </h4>
+            </span>
+        </div>
+        <!-- GRID Header Section-->
+
+        <!-- GRID Fields Section-->
+        <div class="slds-col slds-size_12-of-12">
+            <div class="slds-grid slds-gutters_direct-large slds-wrap">
+                <div class="slds-col slds-size_12-of-12 slds-order_16">
+                    <span>
+                        <lightning:input type="text" 
+                                            label="{!v.objDataComponent.objDescription.SOD_XS_SubproyectoDelCaso__c.SOD_XS_NotasOrden__c.label}" 
+                                            value="{!v.objDataComponent.objReserve.SOD_XS_NotasOrden__c}" 
+                                            readonly="true"></lightning:input>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- GRID Form Section-->
+        
+    </div>
+    <!-- GRID -->
+
+</aura:component>

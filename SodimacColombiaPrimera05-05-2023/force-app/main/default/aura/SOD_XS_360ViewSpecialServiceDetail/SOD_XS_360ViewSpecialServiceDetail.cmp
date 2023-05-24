@@ -1,0 +1,115 @@
+<!--
+*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 16/03/2021
+Description  : Lightning component - 360 view of a client: Special Services
+History      : CMRSC-4875
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Rodrigo Salinas Oye			RSO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      RSO			16/03/2021		initial version
+********************************************************************************/
+-->
+<aura:component controller="SOD_XS_360ViewSpecialServicesController" implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,lightning:hasPageReference" access="global">
+    <!--Declare Attributes received as Parameter-->
+    <aura:attribute name="dataObject" type="Object" description="Param passed. Contains all data requerid by the component"/>
+    <aura:attribute name="productDataObject" type="Object" description="Param passed. Contains all data requerid by the component to show Product Detail"
+    default=''/>
+    <aura:attribute name="detailRsvIsOpen" type="Boolean" description="Param passed. Store the visibility of this component"
+    default='true'/>
+    <aura:attribute name="headerIsOpen" type="Boolean" description="Param passed. Store the visibility of the table of orders to showing when going back"
+    default='false'/>
+    <aura:attribute name="isFromHeader" type="Boolean" description="Param passed. Store from where the component was showed in the parent"
+    default='false'/>
+    <aura:attribute name="caseVisibility" type="Boolean" description="Param passed. Store from where the component was showed in the parent"
+    default='false'/>
+    <aura:attribute name="productVisibility" type="Boolean" description="Param passed. Store from where the component was showed in the parent"
+    default='false'/>
+
+    <!--Declare Local Attributes-->
+    <aura:attribute name="purchaseDataComponent" type="Object" default="" description="Local attribute. Store the item number selected to show"/>
+    <aura:attribute name="labelComponent" type="Object" default="" description="Local attribute. Store the Labels to show in all Components"/>
+
+    <!--Declare Local Attributes as Parameter for Panel-->
+    <aura:attribute name="lstReserveNumbers" type="String[]" default="" description="Local attribute. List of item numbers selected to show"/>
+    <!--Declare Local Attributes as Parameter for Detail-->
+     <aura:attribute name="objPurchaseData" type="Object" default="" description="Local attribute. Purchase object selected to show"/>
+
+    <!--Handler -->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change" value="{!v.dataObject}" action="{!c.doInit}"/>
+    <aura:handler name="onPanelSelectionFired" event="c:SOD_XS_ReserveSelectionEvent" action="{! c.handlePanelReserveSelection }"/>
+    <aura:handler name="ProductActionEventFired" event="c:SOD_XS_ProductActionEvent" action="{! c.handleProductSelection }"/>
+
+    <!--component -->
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_large" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+        <!--Load the spinner gif-->
+        <div>
+            <aura:if isTrue="{! v.purchaseDataComponent.boolLoadedComponent }">                    
+                <aura:set attribute="else">
+                    <lightning:spinner alternativeText="Loading" />
+                </aura:set>
+            </aura:if>
+        </div>
+    
+        <div class="slds-modal__container">
+
+            <!--header -->
+            <header class="slds-modal__header">
+                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">
+                    {! v.labelComponent.detail.header }
+                </h2>
+            </header>
+
+            <!--main section -->
+            <div class="slds-modal__content slds-var-p-around_large" id="modal-content-id-1">
+
+                <!-- GRID -->
+                <div class="slds-grid slds-gutters_direct slds-wrap">
+
+                    <!-- Column Panel-->
+                    <div class="slds-col slds-size_2-of-12">
+                            <!-- Panel Section -->
+                            <c:SOD_XS_360ViewDetailPanel  aura:id="ReserveDetailPanel"
+                                                          lstReserveNumbers="{! v.lstReserveNumbers}"
+                                                          labelObject="{! v.labelComponent }"/>
+                    </div>
+                    <!-- Column Panel-->
+
+                    <!-- Column Detalle-->
+                    <div class="slds-grid slds-size_10-of-12">
+                            <!-- Detail Section -->
+                            <c:SOD_XS_360ViewDetailContent aura:id="ReserveDetailComp"
+                                                           dataPurchase = "{! v.objPurchaseData }"
+                                                           productDataObject = "{! v.productDataObject }"
+                                                           labelObject = "{! v.labelComponent }" />
+                            
+                    </div>
+                    <!-- Column Detalle-->
+
+                </div>
+                <!-- GRID -->
+                
+            </div>
+
+            <!--footer-->
+            <footer class="slds-modal__footer">                    
+                <lightning:button onclick="{! c.handleCancelButton }" 
+                                    label="{! v.labelComponent.detail.button_back }"
+                                    iconName="utility:back" 
+                                    iconPosition="left" 
+                                    variant="brand"/>
+                <lightning:button onclick="{! c.handleCreateButton }" 
+                                    label="{! v.labelComponent.detail.button_next }"
+                                    iconName="utility:forward" 
+                                    iconPosition="right" 
+                                    variant="brand"/>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+
+</aura:component>

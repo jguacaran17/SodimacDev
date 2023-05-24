@@ -1,0 +1,16 @@
+<!--*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 13/07/2020
+Description  : BUC- Integration process optimization.
+History      : CMRSC-3784
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Abdón Tejos Oliva			ATO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      ATO			13/07/2020		initial version
+********************************************************************************/-->
+<aura:event type="COMPONENT" description="by this event we are pass the selected sObject(lookup list record) in the parent component">
+    <aura:attribute name="recordByEvent" type="sObject"/>
+</aura:event>

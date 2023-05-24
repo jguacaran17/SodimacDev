@@ -1,0 +1,76 @@
+<!--
+*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 05/11/2020
+Description  : Lightning component - 360 view of a client: Panel for Reserves Lists
+History      : CMRSC-3930
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Rodrigo Salinas Oye			RSO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      RSO			05/11/2020		initial version
+********************************************************************************/
+-->
+<aura:component implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,lightning:hasPageReference" access="global">
+    <!--Declare Attributes received as Parameter-->
+    <aura:attribute name="lstReserveNumbers" type="String[]" default="['red', 'green', 'blue']" description="Param passed. The list of reserve numbers for show in the panel"/>
+    <aura:attribute name="labelObject" type="Object" description="Param passed. Contains all labels required by the component to show Detail"/>
+
+    <!--Declare Local Attributes-->
+    <aura:attribute name="objComponentData" type="Object" default="" description="Local Attribute. The list of elements for Navigation Panel" />
+
+    <!--Handler -->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change" value="{!v.lstReserveNumbers}" action="{!c.doInit}"/>
+
+    <!--Event -->
+    <aura:registerevent name="onPanelSelectionFired" type="c:SOD_XS_ReserveSelectionEvent"/>
+
+    <!--Main Section -->
+    <!-- GRID -->
+    <div class="slds-grid slds-gutters_direct slds-wrap">
+
+        <!-- Column Panel-->
+        <div class="slds-col">
+            <span>
+                <!-- Panel Section -->
+                <lightning:verticalNavigation 
+                                selectedItem="{! v.objComponentData.selectedItem }"
+                                onselect="{! c.handleSelect }"
+                                class="navigation">
+                    <!-- iteration -->
+                    <aura:iteration items="{! v.objComponentData.navigation }" var="section">
+                        <lightning:verticalNavigationSection label="{! section.label }">
+
+                            <aura:iteration items="{! section.items }" var="item">
+                                <aura:if isTrue="{! !empty(item.icon) }">
+
+                                    <lightning:verticalNavigationItemIcon
+                                        label="{! item.label }"
+                                        name="{! item.name }"
+                                        iconName="{! item.icon }" />
+
+                                    <aura:set attribute="else">
+                                        <lightning:verticalNavigationItem
+                                            label="{! item.label }"
+                                            name="{! item.name }" />
+                                    </aura:set>
+
+                                </aura:if>
+                            </aura:iteration>
+
+                        </lightning:verticalNavigationSection>
+                    </aura:iteration>
+                    <!-- iteration -->
+                </lightning:verticalNavigation>
+                <!-- Panel Section -->
+            </span>
+        </div>
+        <!-- Column Panel-->
+
+    </div>
+    <!-- GRID -->
+
+</aura:component>

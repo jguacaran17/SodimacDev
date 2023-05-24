@@ -1,0 +1,93 @@
+<!--*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 09/12/2020
+Description  : Lightning component - 360 view of a client: Products
+History      : CMRSC-3932
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Eilhert Andrade Alviárez	EAA
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      EAA			09/12/2020		initial version
+********************************************************************************/-->
+<aura:component controller="SOD_XS_360ViewProductController" implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,lightning:hasPageReference" access="global">
+
+    <!-- attributes -->
+    <aura:attribute name="reserveNumber" type="String" />
+    <aura:attribute name="sku" type="String" />
+    <aura:attribute name="description" type="String"/>
+    <aura:attribute name="countryCode" type="String"/>
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="detailRsvIsOpen" type="Boolean"/>
+    <aura:attribute name="productVisibility" type="Boolean"/>
+
+    <!-- handlers-->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }"/>
+    <!--Loads static resource for the data table-->
+    <ltng:require scripts="{!$Resource.SOD_XS_UtilTablaDeDatos}"/>
+    
+    <!--component -->
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_medium" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+        <div class="slds-modal__container">
+            <!--header -->
+            <header class="slds-modal__header">
+                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Detalle de Producto</h2>
+            </header>
+
+            <!--main section -->
+            <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-1">
+                <div class="slds-grid slds-grid_vertical slds-gutters_direct slds-wrap" >
+
+                    <!-- Attributes -->
+                    <div class="slds-col slds-size_7-of-12 ">
+                        <span>
+                            <lightning:input type="text" 
+                                            label="Nro Reserva" 
+                                            value="{!v.reserveNumber}" 
+                                            readonly="true"></lightning:input>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_7-of-12 ">
+                        <span>
+                            <lightning:input type="text" 
+                                            label="Código Producto" 
+                                            value="{!v.sku}" 
+                                            readonly="true"></lightning:input>
+                        </span>
+                    </div>
+                    <div class="slds-col slds-size_7-of-12 ">
+                        <span>
+                            <lightning:input type="text" 
+                                            label="Descripción Producto" 
+                                            value="{!v.description}" 
+                                            readonly="true"></lightning:input>
+                        </span>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="slds-col slds-size_11-of-12 ">
+                        <!-- the container element determine the height of the datatable -->
+                        <div style="height: 300px">
+                            <c:SOD_XS_DataTable data="{!v.data}"
+                                                columns="{!v.columns}"
+                                                hideCheckboxColumn="true"
+                                                /> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--footer-->
+            <footer class="slds-modal__footer">                    
+                <lightning:button onclick="{! c.handleBackButton }" 
+                                    label="Volver"
+                                    iconName="utility:back" 
+                                    iconPosition="left" 
+                                    variant="brand"/>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</aura:component>

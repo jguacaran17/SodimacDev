@@ -1,0 +1,47 @@
+<!--*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 27/10/2020
+Description  : Lightning component - Generic data table for complex object structures.
+History      :
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Abdón Tejos Oliva			ATO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      ATO			27/10/2020		initial version
+********************************************************************************/-->
+<aura:component implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,lightning:hasPageReference" access="global">
+    
+    <!--Declare Attributes-->
+    <aura:attribute name="data" type="Object" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="sortDirection" type="String" default="asc" />
+    <aura:attribute name="defaultSortDirection" type="String" default="asc" />
+    <aura:attribute name="sortedBy" type="String" />
+    <aura:attribute name="selectedRows" type="List" />
+    <aura:attribute name="selectedReserve" type="List" />
+    <aura:attribute name="hideCheckboxColumn" type="Boolean" default="false"/>
+
+    <!--Loads static resource for the data table-->
+    <ltng:require scripts="{!$Resource.SOD_XS_UtilTablaDeDatos}"/>
+
+    <aura:registerevent name="headerActionEventFired" type="c:SOD_XS_HeaderActionEvent"/>
+    
+    <lightning:datatable
+                         keyField="id"
+                         columns="{! v.columns }"
+                         data="{! v.data }"
+                         hideCheckboxColumn="{! v.hideCheckboxColumn }"
+                         defaultSortDirection="{! v.defaultSortDirection }"
+                         sortedDirection="{! v.sortDirection }"
+                         sortedBy="{! v.sortedBy }"
+                         onsort="{! c.handleSort }"
+                         selectedRows="{! v.selectedRows }"
+                         showRowNumberColumn="true"
+                         onrowaction="{! c.handleRowAction }"
+                         onrowselection="{! c.updateSelected}">
+
+    </lightning:datatable>
+    
+</aura:component>

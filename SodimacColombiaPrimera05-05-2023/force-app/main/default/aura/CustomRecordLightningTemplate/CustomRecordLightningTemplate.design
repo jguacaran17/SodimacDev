@@ -1,0 +1,18 @@
+<design:component label="Tree region 50%/50% and a column">
+  <flexipage:template>
+    <!-- The default width for the "left" region is "MEDIUM". In tablets,
+        the width is "SMALL" -->
+    <flexipage:region name="right" label="Right Region" defaultWidth="SMALL">
+      <flexipage:formfactor type="MEDIUM" width="SMALL" />
+    </flexipage:region>
+    <flexipage:region name="left" label="Left Region" defaultWidth="MEDIUM" />
+    <flexipage:region name="bottom" label="Bottom Region" defaultWidth="LARGE">
+      <flexipage:formfactor type="LARGE" width="LARGE" />
+    </flexipage:region>
+  </flexipage:template>
+
+  <design:supportedFormFactors>
+    <design:supportedFormFactor type="Small" />
+    <design:supportedFormFactor type="Large" />
+  </design:supportedFormFactors>
+</design:component>

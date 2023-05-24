@@ -1,0 +1,10 @@
+.THIS {
+}
+
+.THIS.slds-col {
+    border: 4px solid blue;
+}
+
+.THIS .slds-modal__content{
+    overflow: initial;
+}

@@ -1,0 +1,18 @@
+<!--*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 08/07/2020
+Description  : Lightning component - Creating and updating clients(BUC)
+History      : CMRSC-3784
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Abdón Tejos Oliva			ATO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      ATO			08/07/2020		initial version
+********************************************************************************/-->
+<aura:component controller="SOD_XS_UpsertClientsBUCController"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride,lightning:hasPageReference" access="global">
+    <aura:attribute name="accRcd" type="Account" default="{}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+</aura:component>

@@ -1,0 +1,20 @@
+<aura:component implements="lightning:recordHomeTemplate" description="Main column
+ and right sidebar. On a phone, the regions are of equal width">
+  <aura:attribute name="left" type="Aura.Component[]" />
+  <aura:attribute name="right" type="Aura.Component[]" />
+  <aura:attribute name="bottom" type="Aura.Component[]" />
+
+  <div>
+    <lightning:layout>
+      <lightning:layoutItem size="4" flexibility="auto">
+        {!v.left}
+      </lightning:layoutItem>
+      <lightning:layoutItem size="8" flexibility="auto" padding="horizontal-small">
+        {!v.right}
+      </lightning:layoutItem>
+    </lightning:layout>
+  </div>
+  <div class="slds-p-around_small">
+    {!v.bottom}
+  </div>
+</aura:component>

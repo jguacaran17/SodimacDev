@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Public</cacheControl>
+    <contentType>text/plain</contentType>
+    <description>Recurso estatico utilizado en la clase de TEST SOD_XS_360ViewPurchasesController_TEST para la creacion de un caso de reclamo CL</description>
+</StaticResource>

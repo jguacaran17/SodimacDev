@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Public</cacheControl>
+    <contentType>application/vnd.ms-excel</contentType>
+    <description>Registros de prueba para el objeto Contact, los cuales son usados en la clase test SOD_XS_DataFactory.</description>
+</StaticResource>

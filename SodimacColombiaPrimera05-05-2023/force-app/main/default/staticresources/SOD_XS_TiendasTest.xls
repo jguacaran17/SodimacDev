@@ -1,0 +1,4 @@
+SOD_XS_TiendaActiva__c,SOD_XS_CentroDeCosto__c,Name,SOD_XS_NombreCorto__c,SOD_XS_NombreCompleto__c,SOD_XS_TipoDeCC__c
+true,214,Bodega,Bodega,Bodega,BOD
+true,972,Tienda,Tienda,Tienda,TDA
+true,913,Origen,Origen,Origen,BOD

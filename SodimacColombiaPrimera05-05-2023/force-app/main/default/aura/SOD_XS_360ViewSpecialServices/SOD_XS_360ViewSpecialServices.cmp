@@ -1,0 +1,233 @@
+<!--*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 15/03/2021
+Description  : Lightning component - 360 view of a client: Purcharses of Special Services
+History      :
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Abdón Tejos Oliva			ATO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      ATO			15/03/2021		initial version
+********************************************************************************/-->
+<aura:component controller="SOD_XS_360ViewSpecialServicesController" implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,lightning:hasPageReference" access="global">
+ 
+    <!--Declare Attributes-->
+    <aura:attribute name="objSearchCriteria" type="Object" />
+    <aura:attribute name="activeSections" type="List" default="['A','B']" />
+    <aura:attribute name="activeDataTable" type="List" default="false" />
+    <aura:attribute name="activeSectionsMessage" type="String" default="" />
+    <aura:attribute name="accordionSectionMessage" type="String" default="{! $Label.c.SOD_XS_V360_SPS_EtiquetaRangoFecha }" />
+    <aura:attribute name="activeSearchMessage" type="String" default="{! $Label.c.SOD_XS_V360_SPS_EtiquetaRangoFecha }" />
+    <aura:attribute name="activeSearchMessagePrefix" type="String" default="Por " />
+    <aura:attribute name="documentPattern" type="String" />
+    <aura:attribute name="documentPlaceHolder" type="String" />
+    <aura:attribute name="documentFieldLevelHelp" type="String" />
+    <aura:attribute name="data" type="Object" />
+    <aura:attribute name="mapPurchasesResult" type="Map" />
+    <aura:attribute name="selectedPurchase" type="Object" />
+    <aura:attribute name="objCaseData" type="Object" />
+    <aura:attribute name="rowActions" type="Object" />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="detailIsOpen" type="Boolean" default="false" />
+    <aura:attribute name="caseComponentVisibility" type="Boolean" default="false" />
+    <aura:attribute name="isProject" type="Boolean" default="false" />
+    <aura:attribute name="loaded" type="Boolean" default="true" />
+    <aura:attribute name="showError" type="Boolean" default="false"/>
+    <aura:attribute name="errorMessage" type="String"/>
+
+    <!--Loads static resource for the data table-->
+    <ltng:require scripts="{!$Resource.SOD_XS_UtilTablaDeDatos}"/>
+
+
+    <!--Load the start method-->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    
+    <!--wait for event handler trigger-->
+    <aura:handler name="headerActionEventFired" event="c:SOD_XS_HeaderActionEvent" action="{! c.handleEvent }"/>
+
+    <div class="slds-is-relative">
+        
+        
+        <!--Load the spinner gif-->
+        <div class="exampleHolder">
+            <aura:if isTrue="{! v.loaded }">                    
+                <aura:set attribute="else">
+                    <lightning:spinner alternativeText="Loading" />
+                </aura:set>
+            </aura:if>
+        </div>
+                
+        <p>{! v.activeSectionsMessage }</p>
+        
+        <lightning:accordion
+                             allowMultipleSectionsOpen="true"
+                             activeSectionName="{! v.activeSections }"
+                             >
+            <lightning:accordionSection name="A" label="{! $Label.c.SOD_XS_V360_SPS_EncabezadoAcordeonSeccionA }">
+                               
+                <aura:set attribute="actions">
+                    <lightning:buttonMenu aura:id="menu" alternativeText="Show menu" menuAlignment="right" iconSize="x-small" onselect="{! c.handleSelect }" iconName="utility:record_lookup" >
+                        <lightning:menuItem value="SearchByDoc" label="{! v.activeSearchMessagePrefix + $Label.c.SOD_XS_V360_SPS_EtiquetaTipoDocumento }" iconName="utility:record_lookup"/>
+                        <lightning:menuItem value="SearchByProjectNumber" label="{! v.activeSearchMessagePrefix + $Label.c.SOD_XS_V360_SPS_EtiquetaNumeroProyecto }" iconName="utility:record_lookup"/>
+                        <lightning:menuItem value="SearchBySubProjectNumber" label="{! v.activeSearchMessagePrefix + $Label.c.SOD_XS_V360_SPS_EtiquetaNumeroSubProyecto }" iconName="utility:record_lookup"/>
+                        <lightning:menuItem value="SearchByDateRange" label="{! v.activeSearchMessagePrefix + $Label.c.SOD_XS_V360_SPS_EtiquetaRangoFecha }" iconName="utility:record_lookup"/>
+                    </lightning:buttonMenu>
+                </aura:set>
+                <aura:set attribute="body">
+                    
+                    <lightning:layout multipleRows="true">
+                        
+                        <lightning:layoutItem padding="around-small" size="12">
+                            <h4 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-var-p-horizontal_small" title="Section Title">{! $Label.c.SOD_XS_V360_SPS_EncabezadoSeccionBusqueda + ' ' + v.activeSearchMessage }</span>
+                            </h4>
+                        </lightning:layoutItem>
+                        <aura:if isTrue="{!v.objSearchCriteria.isSalesDocument}">
+                            
+                            <lightning:layoutItem padding="around-small" size="8">
+                                <lightning:select aura:id="accDocType"
+                                                  name="accDocType"
+                                                  label="{!$Label.c.SOD_XS_V360_SPS_EtiquetaTipoDocumento }"
+                                                  value="{!v.objSearchCriteria.salesDocumentFilter.salesDocumentType}"
+                                                  onchange="{!c.onChangeSalesDocumentType}"
+                                                  required="true">
+                                    <option value="{!null}">--Ninguno--</option>
+                                    <aura:iteration items="{!v.objSearchCriteria.docType}" var="option">
+                                        <option value="{!option.value}" text="{!option.label}" />
+                                    </aura:iteration>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                            
+                            <lightning:layoutItem padding="around-small" size="8">
+                                <lightning:input aura:id="scDocNumber"
+                                                 name="scDocNumber"
+                                                 label="{! 'Ingresar ' + $Label.c.SOD_XS_V360_SPS_EtiquetaTipoDocumento }"
+                                                 value="{!v.objSearchCriteria.salesDocumentFilter.salesDocumentNumber}"
+                                                 required="true"
+                                                 maxlength="40" 
+                                                 fieldLevelHelp="{!v.documentFieldLevelHelp}"
+                                                 pattern="{!v.documentPattern}"
+                                                 placeholder="{!v.documentPlaceHolder}"
+                                                 />
+                            </lightning:layoutItem>
+                            
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.objSearchCriteria.isProject}">
+                            
+                            <lightning:layoutItem padding="around-small" size="8">
+                                <lightning:input aura:id="scProjectNumber"
+                                                 name="scProjectNumber"
+                                                 label="{! 'Ingresar ' + $Label.c.SOD_XS_V360_SPS_EtiquetaNumeroProyecto }"
+                                                 value="{!v.objSearchCriteria.projectNumber}"
+                                                 required="true"
+                                                 maxlength="40"
+                                                 />
+                            </lightning:layoutItem>
+                            
+                        </aura:if>
+
+                        <aura:if isTrue="{!v.objSearchCriteria.isSubProject}">
+                            
+                            <lightning:layoutItem padding="around-small" size="8">
+                                <lightning:input aura:id="scSubProjectNumber"
+                                                 name="scSubProjectNumber"
+                                                 label="{! 'Ingresar ' + $Label.c.SOD_XS_V360_SPS_EtiquetaNumeroSubProyecto }"
+                                                 value="{!v.objSearchCriteria.subProjectNumber}"
+                                                 required="true"
+                                                 maxlength="40"
+                                                 />
+                            </lightning:layoutItem>
+                            
+                        </aura:if>
+                        
+                        <aura:if isTrue="{!v.objSearchCriteria.isDateRange}">
+                            
+                            <lightning:layoutItem padding="around-small" size="8">
+                                <ui:inputDate aura:id="scDateFrom"
+                                              displayDatePicker="true"
+                                              label="Desde"
+                                              value="{!v.objSearchCriteria.purchaseDateFilter.dateFrom}"
+                                              format="DD-MM-YYYY"
+                                              change="{!c.dateFromUpdate}"/>
+                                <ui:inputDate aura:id="scDateTo"
+                                              displayDatePicker="true"
+                                              label="Hasta"
+                                              value="{!v.objSearchCriteria.purchaseDateFilter.dateTo}"
+                                              format="DD-MM-YYYY"
+                                              change="{!c.dateToUpdate}"/>
+                            </lightning:layoutItem>
+                            
+                        </aura:if>
+                        
+                        <lightning:layoutItem padding="around-small" size="8">                            
+                            <lightning:button aura:id="scBuscar"
+                                              variant="brand" 
+                                              label="Buscar" 
+                                              iconName="utility:record_lookup" 
+                                              onclick="{!c.searchOrdersBy}" />
+                        </lightning:layoutItem>
+                        
+                    </lightning:layout>                    
+                    
+                </aura:set>
+                
+            </lightning:accordionSection>
+            <aura:if isTrue="{!v.activeDataTable}">
+                <lightning:accordionSection name="B" label="{! $Label.c.SOD_XS_V360_SPS_EncabezadoAcordeonSeccionB + ' ' + v.accordionSectionMessage }">
+
+                    <aura:if isTrue="{! v.showError}">
+                        <ui:message title="{! $Label.c.SOD_XS_V360_SPS_TituloVentanasEmergentes }" severity="warning" closable="true">
+                            {! v.errorMessage }
+                        </ui:message>
+                    </aura:if>
+                    <!-- toolbox -->
+                    <lightning:card>
+                        <h1 class="slds-var-m-horizontal_small">{! $Label.c.SOD_XS_V360_SPS_TotalServiciosEspeciales + ' ' + v.objSearchCriteria.totalElements }</h1>
+                        <br></br>
+                        <br></br>
+                        <!-- the container element determine the height of the datatable -->
+                        <div style="height: 25rem">                      
+                            <c:SOD_XS_DataTable data="{!v.data}"
+                                                columns="{!v.columns}"/>
+                        </div>
+                    </lightning:card>
+
+                </lightning:accordionSection>
+            </aura:if>
+        </lightning:accordion>
+        
+    </div>
+
+    <!--Detail of a Project or SubProject
+    <aura:if isTrue="{!v.detailIsOpen}">
+        <c:SOD_XS_360ViewSpecialServiceDetail   
+                                detailIsOpen="{!v.detailIsOpen}"
+                                />
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>    
+    -->
+
+        <!--Detail of a Special Service Purchase-->
+    <aura:if isTrue="{!v.detailIsOpen}">
+        <c:SOD_XS_360ViewSpecialServiceDetail   
+                                detailRsvIsOpen="{!v.detailIsOpen}"
+                                caseVisibility="{!v.caseComponentVisibility}"
+                                dataObject="{!v.objCaseData}"
+                                />
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>    
+
+    <!--Case Creation Component-->
+    <aura:if isTrue="{!v.caseComponentVisibility}">
+        <c:SOD_XS_360ViewCreateCaseForSpecialServices
+                                componentVisibility="{!v.caseComponentVisibility}"
+                                parentComponentVisibility="{!v.detailIsOpen}"
+                                objCaseData="{!v.objCaseData}"
+                                />
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+</aura:component>

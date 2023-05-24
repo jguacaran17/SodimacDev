@@ -1,0 +1,128 @@
+<!--
+*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 05/11/2020
+Description  : Lightning component - 360 view of a client: Detail of a Reserve
+History      : CMRSC-3930
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Rodrigo Salinas Oye			RSO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      RSO			05/11/2020		initial version
+********************************************************************************/
+-->
+<aura:component implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,lightning:hasPageReference" access="global">
+    <!--Declare Attributes received as Parameter-->
+    <aura:attribute name="dataPurchase" type="Object" default="" description="Param passed. Component Object with Reserve and Products Data"/>
+    <aura:attribute name="productDataObject" type="Object" description="Param passed. Contains all data requerid by the component to show Product Detail"/>
+    <aura:attribute name="labelObject" type="Object" description="Param passed. Contains all labels required by the component to show Detail"/>
+    <!--Declare Local Attributes-->
+    <aura:attribute name="objReserveComponent" type="Object" default="" description="Local Attribute. Object with the container for Products Data"/>
+    <!--Declare Local Attributes as Parameter for Data Table-->
+    <aura:attribute name="objProductData" type="Object" default="" description="Local Attribute. List of products to show in the table"/>
+    <aura:attribute name="lstProductSelected" type="List" default="" description="Local Attribute. List of the products selected in the table"/>
+    <aura:attribute name="draftValues" type="List" default="" description="Local Attribute. List of the modified products in the table"/>
+    <aura:attribute name="errors" type="Object" default="" description="Local Attribute. List of the errors found in the table"/>
+    <aura:attribute name="classColumns" type="String" default="" description="Local Attribute. Define the columns used for product table"/>
+
+    <!--Handler -->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change" value="{!v.dataPurchase}" action="{!c.doInit}"/>
+    <!--Event -->
+    <aura:registerevent name="ProductActionEventFired" type="c:SOD_XS_ProductActionEvent"/>
+
+    <!-- Accordion Section -->   
+    <lightning:accordion aura:id="accordion" activeSectionName="B">
+        <!-- Accordion Section -->  
+        <lightning:accordionSection name="A" 
+                                    label="{! v.labelObject.content.accordeon_products }">
+            
+            <!-- GRID -->
+            <div class="slds-grid slds-grid_vertical slds-gutters_direct slds-wrap" >
+
+                <!-- GRID Product Table Section-->
+                <aura:if isTrue="{! empty(v.objProductData) }">
+                    <div class="slds-col slds-size_12-of-12" style="height: 100px; ">
+                        <h4 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" 
+                                title="Section Title">No hay productos para mostrar.</span>
+                        </h4>
+                    </div>
+
+                    <aura:set attribute="else">
+                        <div class="slds-scrollable" style="height:350px; width:1130px;">
+                            <h4 class="slds-section__title slds-theme_shade">
+                                <span class="slds-truncate slds-p-horizontal_small" 
+                                      title="Section Title">{! v.labelObject.content.products_detail }</span>
+                            </h4>
+                            <!-- Product Table -->
+                            <div >
+                            <lightning:datatable class="tablecol" aura:id="datatable1"
+                                                keyField="SOD_XS_Key"
+                                                hideCheckboxColumn="false"
+                                                showRowNumberColumn="true"
+                                                columns="{! v.objReserveComponent.objProductDescription }"
+                                                data="{! v.objProductData }"
+                                                selectedRows="{! v.lstProductSelected }"
+                                                draftValues="{! v.draftValues }"
+                                                errors = "{! v.errors}"
+                                                onsave="{! c.handleSaveSelection }"
+                                                onrowselection="{! c.handleRowSelection}"
+                                                onrowaction="{! c.handleRowAction }"/>
+                            </div>
+                        </div>
+                    </aura:set>
+
+                </aura:if>
+            </div>
+            <!-- GRID Product Table Section-->
+                
+
+
+        </lightning:accordionSection>
+        <!-- Accordion Section -->  
+        
+        <!-- Accordion Section -->  
+        <lightning:accordionSection name="B" 
+                                    label="{! v.labelObject.content.accordeon_detail }">
+            <aura:if isTrue="{! (v.objReserveComponent.strObjectType == 'PRC') }">
+                    
+                <!-- DETAIL OF A RESERVE -->
+                <c:SOD_XS_360ViewDetailReserve aura:id="ReserveDetailComp"
+                                            objDataComponent = "{! v.objReserveComponent }"
+                                            strReserveNumber = "{! v.objReserveComponent.objReserve.Name }" 
+                                            labelObject = "{! v.labelObject}" />
+            </aura:if>
+            <aura:if isTrue="{! (v.objReserveComponent.strObjectType == 'PMT') }">
+
+                <!-- DETAIL OF A DOCUMENT -->
+                    <c:SOD_XS_360ViewDetailDocument aura:id="ReserveDetailComp"
+                                                   objDataComponent = "{! v.objReserveComponent }"
+                                                   strDocumentNumber = "{! v.objReserveComponent.objSellDoc.Name }" 
+                                                   labelObject = "{! v.labelObject}" />
+            </aura:if>
+            <aura:if isTrue="{! (v.objReserveComponent.strObjectType == 'SSP_SUBP') }">
+
+                <!-- DETAIL OF A SUBPROJECT -->
+                <c:SOD_XS_360ViewDetailSubproject aura:id="ReserveDetailComp"
+                                                   objDataComponent = "{! v.objReserveComponent }"
+                                                   strReserveNumber = "{! v.objReserveComponent.objSellDoc.Name }" 
+                                                   labelObject = "{! v.labelObject}" />
+            </aura:if>
+            <aura:if isTrue="{! (v.objReserveComponent.strObjectType == 'SSP_PRJ') }">
+                <!-- DETAIL OF A PROJECT -->
+                <c:SOD_XS_360ViewDetailProject aura:id="ReserveDetailComp"
+                                                    objDataComponent = "{! v.objReserveComponent }"
+                                                    strDocumentNumber = "{! v.objReserveComponent.objAsocDoc.Name }" 
+                                                    labelObject = "{! v.labelObject}" />
+            </aura:if>
+
+        </lightning:accordionSection>
+        <!-- Accordion Section -->  
+
+    </lightning:accordion>
+    <!-- Accordion --> 
+
+</aura:component>

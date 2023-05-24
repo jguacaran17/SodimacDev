@@ -1,0 +1,434 @@
+{
+    "threeHundredAndSixtyView": {
+        "pagination": {
+            "numberOfPages": 1,
+            "totalElements": 1,
+            "page": 1
+        },
+        "reserves": null,
+        "purchaseOrders": [
+            {
+                "purchaseDate": "20-04-2018 00:00",
+                "salesDocument": {
+                    "documentType": "FACTURA",
+                    "documentNumber": "12400001"
+                },
+                "orderNumber": "21336522611",
+                "amount": null,
+                "currencyInformation": null,
+                "paymentMethods": null,
+                "shopThatSells": {
+                    "id": "972",
+                    "name": "CENTRO COSTO VIRTUAL"
+                },
+                "reserves": [
+                    {
+                        "id": "2020673555",
+                        "reserveNumber": "2020673555",
+                        "motherReserveNumber": null,
+                        "reserveType": "DESPACHO",
+                        "deliveryType": {
+                            "code": "dd",
+                            "nombre": "DESPACHO A DOMICILIO"
+                        },
+                        "state": {
+                            "id": 6,
+                            "name": "EN PROCESO"
+                        },
+                        "reserveDate": "20-04-2018 00:00",
+                        "salesOrderNumber": "21336522611",
+                        "salesDocument": {
+                            "documentType": "FACTURA",
+                            "documentNumber": "12400001"
+                        },
+                        "amount": 15150,
+                        "currencyInformation": null,
+                        "shopThatSells": {
+                            "id": "972",
+                            "name": "CENTRO COSTO VIRTUAL"
+                        },
+                        "salesChannel": {
+                            "id": "ecommerce",
+                            "name": "ECOMMERCE"
+                        },
+                        "purchaseHolder": {
+                            "Identification": {
+                                "value": "13550036-4",
+                                "identificationType": "RUT",
+                                "isoCountry": "CL"
+                            },
+                            "names": "ANDREA CAMPOS",
+                            "lastName": "",
+                            "email": null,
+                            "customerPhone": "999999999"
+                        },
+                        "dispatch": {
+                            "nameToWhomIsDispatched": "ANDREA CAMPOS VALENZUELA",
+                            "observation": null,
+                            "firstPhone": "227381000",
+                            "secondPhone": "227381000",
+                            "address": {
+                                "street": "OHIGGINS 1234",
+                                "administrativeArea": "REGION METROPOLITANA DE SANTIA",
+                                "locality": "SANTIAGO",
+                                "subAdministrativeArea": "QUILICURA"
+                            },
+                            "amount": 15150,
+                            "currencyInformation": null
+                        },
+                        "hasNcr": false,
+                        "detail": [
+                            {
+                                "id": "20206735551",
+                                "dispatch": {
+                                    "dispatchType": "D",
+                                    "dispatchDate": "24-04-2018",
+                                    "costCenter": {
+                                        "id": "913",
+                                        "name": "SODIMAC MACHU 913"
+                                    },
+                                    "dispatchGuideNumber": "0"
+                                },
+                                "isBlocked": false,
+                                "isBreak": false,
+                                "product": {
+                                    "sku": "462004",
+                                    "description": "LA_NSR_TIERRA BIO COMPOST 80 L.."
+                                },
+                                "quantity": 1,
+                                "unitPrice": 15150,
+                                "amount": 15150,
+                                "seller": null,
+                                "state": {
+                                    "id": 109,
+                                    "name": "EN PICKING TDA"
+                                },
+                                "delivery": {
+                                    "beginDate": "24-04-2018",
+                                    "agreedDateRange": {
+                                        "fromDate": "24-04-2018",
+                                        "toDate": "24-04-2018"
+                                    },
+                                    "hourRangeCode": "AM",
+                                    "hourRange": "08:00 a 12:00",
+                                    "deliveryDate": "24-04-2018",
+                                    "inventoryOriginCostCenter": {
+                                        "id": "913"
+                                    }
+                                },
+                                "devolution": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "paymentVouchers": [
+            {
+                "dateOfIssue": "23-02-2018 12:00:00",
+                "documentType": "BOLETA",
+                "documentNumber": "7001217",
+                "salesOrderNumber": "11336269198",
+                "amount": 7000,
+                "discount": -201.98,
+                "totalPrice": 7201.98,
+                "currencyInformation": {
+                    "isoCode": "CLP",
+                    "name": "PESO CHILENO"
+                },
+                "paymentMethods": [
+                    {
+                        "typePaymentMethod": "CREDITO",
+                        "currencyInformation": {
+                            "isoCode": "CLP",
+                            "name": "PESO CHILENO"
+                        },
+                        "amount": 7000
+                    }
+                ],
+                "shopThatSells": {
+                    "id": "1010",
+                    "name": null
+                },
+                "purchaseHolder": {
+                    "Identification": {
+                        "value": "13550036-4",
+                        "identificationType": "RUT",
+                        "isoCountry": ""
+                    },
+                    "names": "ANDREA CAMPOS VALENZUELA",
+                    "lastName": ""
+                },
+                "detail": [
+                    {
+                        "product": {
+                            "sku": "89429X",
+                            "description": "JB_ECO_LA_NSR_MALLA HARNERO GALV No4"
+                        },
+                        "quantity": 50,
+                        "unitPrice": 90,
+                        "discount": -100.99,
+                        "shippingCost": null,
+                        "amount": 4500
+                    },
+                    {
+                        "product": {
+                            "sku": "864900",
+                            "description": "LA_NSR_MASCARILLA DESECHABL GI QA."
+                        },
+                        "quantity": 50,
+                        "unitPrice": 50,
+                        "discount": -100.99,
+                        "shippingCost": null,
+                        "amount": 2500
+                    }
+                ]
+            },
+            {
+                "dateOfIssue": "23-02-2018 12:00:00",
+                "documentType": "BOLETA",
+                "documentNumber": "398095420",
+                "salesOrderNumber": "21336269199",
+                "amount": 127440,
+                "discount": -100.99,
+                "totalPrice": 127540.99,
+                "currencyInformation": {
+                    "isoCode": "CLP",
+                    "name": "PESO CHILENO"
+                },
+                "paymentMethods": [
+                    {
+                        "typePaymentMethod": "CREDITO",
+                        "currencyInformation": {
+                            "isoCode": "CLP",
+                            "name": "PESO CHILENO"
+                        },
+                        "amount": 127440
+                    }
+                ],
+                "shopThatSells": {
+                    "id": "1010",
+                    "name": null
+                },
+                "purchaseHolder": {
+                    "Identification": {
+                        "value": "13550036-4",
+                        "identificationType": "RUT",
+                        "isoCountry": ""
+                    },
+                    "names": "ANDREA CAMPOS VALENZUELA",
+                    "lastName": ""
+                },
+                "detail": [
+                    {
+                        "product": {
+                            "sku": "89429X",
+                            "description": "JB_ECO_LA_NSR_MALLA HARNERO GALV No4"
+                        },
+                        "quantity": 24,
+                        "unitPrice": 5310,
+                        "discount": -100.99,
+                        "shippingCost": null,
+                        "amount": 127440
+                    }
+                ]
+            },
+            {
+                "dateOfIssue": "23-02-2018 12:00:00",
+                "documentType": "BOLETA",
+                "documentNumber": "7001224",
+                "salesOrderNumber": "21336269251",
+                "amount": 75000,
+                "discount": -100.99,
+                "totalPrice": 75100.99,
+                "currencyInformation": {
+                    "isoCode": "CLP",
+                    "name": "PESO CHILENO"
+                },
+                "paymentMethods": [
+                    {
+                        "typePaymentMethod": "CREDITO",
+                        "currencyInformation": {
+                            "isoCode": "CLP",
+                            "name": "PESO CHILENO"
+                        },
+                        "amount": 75000
+                    }
+                ],
+                "shopThatSells": {
+                    "id": "1010",
+                    "name": null
+                },
+                "purchaseHolder": {
+                    "Identification": {
+                        "value": "13550036-4",
+                        "identificationType": "RUT",
+                        "isoCountry": ""
+                    },
+                    "names": "ANDREA CAMPOS VALENZUELA",
+                    "lastName": ""
+                },
+                "detail": [
+                    {
+                        "product": {
+                            "sku": "462004",
+                            "description": "LA_NSR_TIERRA BIO COMPOST 80 L.."
+                        },
+                        "quantity": 50,
+                        "unitPrice": 1500,
+                        "discount": -100.99,
+                        "shippingCost": null,
+                        "amount": 49990
+                    }
+                ]
+            },
+            {
+                "dateOfIssue": "23-02-2018 12:00:00",
+                "documentType": "BOLETA",
+                "documentNumber": "298097550",
+                "salesOrderNumber": "21336269203",
+                "amount": 4050,
+                "discount": -100.99,
+                "totalPrice": 4150.99,
+                "currencyInformation": {
+                    "isoCode": "CLP",
+                    "name": "PESO CHILENO"
+                },
+                "paymentMethods": [
+                    {
+                        "typePaymentMethod": "CREDITO",
+                        "currencyInformation": {
+                            "isoCode": "CLP",
+                            "name": "PESO CHILENO"
+                        },
+                        "amount": 4050
+                    }
+                ],
+                "shopThatSells": {
+                    "id": "1010",
+                    "name": null
+                },
+                "purchaseHolder": {
+                    "Identification": {
+                        "value": "13550036-4",
+                        "identificationType": "RUT",
+                        "isoCountry": ""
+                    },
+                    "names": "ANDREA CAMPOS VALENZUELA",
+                    "lastName": ""
+                },
+                "detail": [
+                    {
+                        "product": {
+                            "sku": "89429X",
+                            "description": "JB_ECO_LA_NSR_MALLA HARNERO GALV No4"
+                        },
+                        "quantity": 45,
+                        "unitPrice": 90,
+                        "discount": -100.99,
+                        "shippingCost": null,
+                        "amount": 4050
+                    }
+                ]
+            },
+            {
+                "dateOfIssue": "23-02-2018 12:00:00",
+                "documentType": "BOLETA",
+                "documentNumber": "7001222",
+                "salesOrderNumber": "21336269242",
+                "amount": 185850,
+                "discount": -100.99,
+                "totalPrice": 185950.99,
+                "currencyInformation": {
+                    "isoCode": "CLP",
+                    "name": "PESO CHILENO"
+                },
+                "paymentMethods": [
+                    {
+                        "typePaymentMethod": "CREDITO",
+                        "currencyInformation": {
+                            "isoCode": "CLP",
+                            "name": "PESO CHILENO"
+                        },
+                        "amount": 185850
+                    }
+                ],
+                "shopThatSells": {
+                    "id": "1010",
+                    "name": null
+                },
+                "purchaseHolder": {
+                    "Identification": {
+                        "value": "13550036-4",
+                        "identificationType": "RUT",
+                        "isoCountry": ""
+                    },
+                    "names": "ANDREA CAMPOS VALENZUELA",
+                    "lastName": ""
+                },
+                "detail": [
+                    {
+                        "product": {
+                            "sku": "116556",
+                            "description": "LA_NSR_CORD HO5VV-F 3X0.75MM N.."
+                        },
+                        "quantity": 35,
+                        "unitPrice": 5310,
+                        "discount": -100.99,
+                        "shippingCost": null,
+                        "amount": 185850
+                    }
+                ]
+            },
+            {
+                "dateOfIssue": "23-02-2018 12:00:00",
+                "documentType": "BOLETA",
+                "documentNumber": "7001216",
+                "salesOrderNumber": "11336269222",
+                "amount": 75000,
+                "discount": -100.99,
+                "totalPrice": 75100.99,
+                "currencyInformation": {
+                    "isoCode": "CLP",
+                    "name": "PESO CHILENO"
+                },
+                "paymentMethods": [
+                    {
+                        "typePaymentMethod": "CREDITO",
+                        "currencyInformation": {
+                            "isoCode": "CLP",
+                            "name": "PESO CHILENO"
+                        },
+                        "amount": 75000
+                    }
+                ],
+                "shopThatSells": {
+                    "id": "1010",
+                    "name": null
+                },
+                "purchaseHolder": {
+                    "Identification": {
+                        "value": "13550036-4",
+                        "identificationType": "RUT",
+                        "isoCountry": ""
+                    },
+                    "names": "ANDREA CAMPOS VALENZUELA",
+                    "lastName": ""
+                },
+                "detail": [
+                    {
+                        "product": {
+                            "sku": "462004",
+                            "description": "LA_NSR_TIERRA BIO COMPOST 80 L.."
+                        },
+                        "quantity": 50,
+                        "unitPrice": 1500,
+                        "discount": -100.99,
+                        "shippingCost": null,
+                        "amount": 75000
+                    }
+                ]
+            }
+        ]
+    }
+}

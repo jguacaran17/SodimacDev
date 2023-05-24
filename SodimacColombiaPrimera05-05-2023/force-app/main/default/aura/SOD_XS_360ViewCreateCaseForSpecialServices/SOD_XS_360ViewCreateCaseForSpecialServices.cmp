@@ -1,0 +1,479 @@
+<!--
+*********************************************************************************
+Project      : Sodimac Salesforce Service Cloud
+Created By   : Deloitte
+Created Date : 18/03/2021
+Description  : Lightning component - 360 view: Case Creation For Special Services
+History      : CMRSC-4891
+**************************ACRONYM OF AUTHORS************************************
+AUTHOR                      ACRONYM
+Rodrigo Salinas Oye			RSO
+********************************************************************************
+VERSION  AUTHOR         DATE            Description
+1.0      RSO			18/03/2021		initial version
+********************************************************************************/
+-->
+<aura:component controller="SOD_XS_360ViewSpecialServicesController" implements="lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,lightning:hasPageReference" access="global">
+    <!--Declare Attributes received as Parameter-->
+    <aura:attribute name="objCaseData" type="Object" description="Param passed. Object with all data required for creating a Case"/>
+    <aura:attribute name="componentVisibility" type="Boolean" description="Param passed. Store the visibility of this component"/>
+    <aura:attribute name="parentComponentVisibility" type="Boolean" description="Param passed. Store the visibility of the parent component"/>
+
+    <!--Declare Local Attributes-->
+    <aura:attribute name="objCaseDataComponent" type="Object" default="" description="Local attribute. Store the Reserve number selected to show"/>
+    <aura:attribute name="objDescriptionComponent" type="Object" default="" description="Local attribute. Store the Description Objects for showing the data of the Component"/>
+    <aura:attribute name="strReservesWithoutProducts" type="String" default="" description="Local attribute. Store the text to show the reserves with no products selected"/>
+    <aura:attribute name="caseConfirmationVisibility" type="Boolean" default="false"/>  
+    <aura:attribute name="caseContentVisibility" type="Boolean" default="true"/> 
+    <aura:attribute name="caseErrorVisibility" type="Boolean" default="false"/> 
+    <aura:attribute name="stopSpinner" type="Boolean" default="false"/>  
+    <!--Handler -->
+    <aura:handler name="init" value="{! this }" action="{! c.doInit }" />
+    <aura:handler name="change" value="{!v.objCaseData}" action="{!c.doInit}"/>
+
+    <!-- Confirmation Dialog Box-->
+    <aura:if isTrue="{! v.caseConfirmationVisibility }">
+    <div role="dialog" aura:id="confirmId" tabindex="-2" class="slds-modal slds-fade-in-open" aria-labelledby="header43" >
+        <!--Load the spinner gif-->
+        <div class="exampleHolder">
+            <aura:if isTrue="{! v.stopSpinner }">                    
+                <aura:set attribute="else">
+                    <lightning:spinner alternativeText="Loading" />
+                </aura:set>
+            </aura:if>
+        </div>
+
+        <div class="slds-modal__container">
+            <!--header -->
+            <header class="slds-modal__header">
+                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{! $Label.c.SOD_XS_V360CASE_CabeceraConfirmacion }</h2>
+            </header>
+            <!--main section -->
+            <div class="slds-modal__content slds-p-around--medium">
+                <div>
+                    <aura:unescapedHtml value="{! $Label.c.SOD_XS_V360CASE_MensajeConfirmacionDetalle }" />
+                    <aura:unescapedHtml value="{! v.strReservesWithoutProducts }" />
+                    <aura:unescapedHtml value="{! $Label.c.SOD_XS_V360CASE_MensajeConfirmacion }" />
+                </div>
+            </div>
+            <!--footer-->
+            <footer class="slds-modal__footer">                    
+                <lightning:button onclick="{! c.handleCancelButton }" 
+                                    label="{! $Label.c.SOD_XS_V360CASE_BotonCancelar }"
+                                    iconName="utility:back" 
+                                    iconPosition="left" 
+                                    variant="brand"/>
+                <lightning:button onclick="{! c.handleConfirmationButton }" 
+                                    label="{! $Label.c.SOD_XS_V360CASE_BotonContinuar }"
+                                    iconName="utility:check" 
+                                    iconPosition="right" 
+                                    variant="success"/>
+            </footer>
+        </div>
+    </div>
+    </aura:if>
+
+    <!-- Error Dialog Box-->
+    <aura:if isTrue="{! v.caseErrorVisibility }">
+    <div role="dialog" aura:id="errorFormId" tabindex="-3" class="slds-modal slds-fade-in-open slds-modal_medium" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+        <!--Load the spinner gif-->
+        <div class="exampleHolder">
+            <aura:if isTrue="{! v.stopSpinner }">                    
+                <aura:set attribute="else">
+                    <lightning:spinner alternativeText="Loading" />
+                </aura:set>
+            </aura:if>
+        </div>
+
+        <div class="slds-modal__container">
+            <!--header -->
+            <header class="slds-modal__header">
+                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Complete los datos requeridos para registrar el caso</h2>
+            </header>
+            <!--main section -->
+            <div class="slds-modal__content slds-var-p-around_large">
+                <!--Component Start-->
+                <lightning:recordEditForm objectApiName="Case"
+                                    aura:id="caseErrorForm"
+                                    recordTypeId = "{! v.objCaseDataComponent.objCase.RecordTypeId}"
+                                    onload="{!c.onFormErrorLoad}"
+                                    onsubmit="{!c.onFormErrorSubmit}"
+                                    density="comfy">
+                <lightning:messages aura:id="OppMessage" />
+
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_4-of-12">
+                        <lightning:inputField required="true" fieldName="SOD_XS_CentroCostoResponsable__c" aura:id="errorCCField"/>
+                        <lightning:inputField required="false" fieldName="SOD_XS_TiendaVende__c" aura:id="errorShopField"/>
+                        <lightning:inputField required="false" fieldName="SOD_XS_FormadePago__c" aura:id="errorPayField"/>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <lightning:inputField required="false" fieldName="SOD_XS_DatosParaLaDevolucion__c" />
+                        <lightning:inputField required="false" fieldName="SOD_XS_ReferenciaDePago__c" />
+                        <lightning:inputField required="false" fieldName="SOD_XS_Monto__c" />
+                    </div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <lightning:inputField required="false" fieldName="SOD_XS_FechaDeCompra__c" />
+                        <lightning:inputField required="false" fieldName="SOD_XS_FechaDeCompraHasta__c" />
+                        <lightning:inputField required="false" fieldName="SOD_XS_FechaDelIncidente__c" />
+                    </div>
+                    <div class="slds-col slds-size_10-of-12"></div>
+                    <div class="slds-col slds-size_2-of-12" align="right">
+                        <lightning:button iconPosition="right" 
+                                            variant="brand"
+                                            type="submit" 
+                                            name="save" 
+                                            label="Continuar" />
+
+                    </div>                   
+                </div>
+                </lightning:recordEditForm>
+            <!--Component End-->
+            </div>
+            <!--footer-->
+            <footer class="slds-modal__footer">                    
+            </footer>
+        </div>
+    </div>
+    </aura:if>
+
+    <!--component -->
+    <aura:if isTrue="{! v.caseContentVisibility }">
+    <div role="dialog" aura:id="contentId" tabindex="-1" class="slds-modal slds-fade-in-open slds-modal_large" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+        <!--Load the spinner gif-->
+        <div class="exampleHolder">
+            <aura:if isTrue="{! v.stopSpinner }">                    
+                <aura:set attribute="else">
+                    <lightning:spinner alternativeText="Loading" />
+                </aura:set>
+            </aura:if>
+        </div>
+
+        <div class="slds-modal__container">
+
+            <!--header -->
+            <header class="slds-modal__header">
+                <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">{!$Label.c.SOD_XS_V360OCEncabezadoCabeceraCasos}</h2>
+            </header>
+
+            <!--main section -->
+            <div class="slds-modal__content slds-var-p-around_large slds-has-dividers_bottom-space" id="modal-content-id-1">
+
+                <!-- GRID SELECTOR-->
+                <div class="slds-grid slds-gutters_direct slds-wrap">
+                    <!-- Column Panel-->
+                    <div class="slds-col slds-size_4-of-12"></div>
+                    <div class="slds-col slds-size_4-of-12">
+                        <lightning:select name="select" 
+                                          aura:id="select"
+                                          label="{! $Label.c.SOD_XS_V360CASE_ResumenTipoRegistro }"
+                                          onchange="{!c.onChangeRecordType}"
+                                          required="true"
+                                          variant="label-inline">
+                            <option value="{!null}">--Ninguno--</option>
+                            <aura:iteration items="{!v.objDescriptionComponent.lstRecordType}" var="rt" >
+                                <option value="{!rt}" text="{!rt}"></option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                    <div class="slds-col slds-size_4-of-12"></div>
+                    
+                    <!-- IF RECORD TYPE SELECTED -->
+                    <aura:if isTrue="{! v.objCaseDataComponent.boolFieldSelectionVisibility == true}"> 
+                    <div class="slds-col slds-size_12-of-12">
+                        <!--Component Start-->
+                        <lightning:recordEditForm objectApiName="Case"
+                                            aura:id="caseForm"
+                                            recordTypeId = "{! v.objCaseDataComponent.objCase.RecordTypeId}"
+                                            onload="{!c.onFormLoaded}"
+                                            onsubmit="{!c.onRecordSubmit}"
+                                            density="comfy">
+                        <lightning:messages />
+
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-12"></div>
+                            <div class="slds-col slds-size_4-of-12">
+                                <lightning:inputField required="true" fieldName="SOD_XS_Area__c" />
+                                <lightning:inputField required="true" fieldName="SOD_XS_Motivo__c" />
+                                <lightning:inputField required="true" fieldName="SOD_XS_Submotivo__c" />
+                            </div>
+                            <div class="slds-col slds-size_2-of-12"></div>
+                            <div class="slds-col slds-size_4-of-12">
+                                <lightning:inputField required="true" fieldName="Origin" />
+                                <lightning:inputField required="true" fieldName="Description" />
+                                <aura:if isTrue="{! empty(v.objCaseDataComponent.objCCResponsable) == true}"> 
+                                    <lightning:inputField required="true" fieldName="SOD_XS_CentroCostoResponsable__c" />
+                                </aura:if>
+                                <lightning:button iconPosition="right" 
+                                                    variant="brand"
+                                                    type="submit" 
+                                                    name="save" 
+                                                    label="Continuar" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-12"></div>
+                        </div>
+                        </lightning:recordEditForm>
+                    <!--Component End-->
+                    </div>
+                    </aura:if>
+                    <!-- Column Panel-->
+                </div>
+                <!-- GRID SELECTOR-->
+                              
+                <!-- IF RECORD TYPE SELECTED -->
+                <aura:if isTrue="{! v.objCaseDataComponent.boolRecordCompleted == true}">                       
+                <!-- GRID -->
+                <div class="slds-grid slds-gutters_direct slds-wrap">
+                    
+                    <!-- CASO: Encabezado-->
+                    <div class="slds-col slds-size_12-of-12">
+                        <br/>
+                        <h4 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" 
+                                    title="Section Title">{!$Label.c.SOD_XS_V360CASE_ResumenDetalleCaso}</span>
+                        </h4>
+                    </div>
+                    <!-- CASO: Encabezado-->
+                    <!-- CASO: Detalle-->
+                    <div class="slds-col slds-size_4-of-12"></div>
+                    <div class="slds-col slds-size_6-of-12">
+                        <lightning:tile label="{! v.objDescriptionComponent.objCase}">
+                            <aura:set attribute="media">
+                                <lightning:icon iconName="utility:case"/>
+                            </aura:set>
+                            <dl class="slds-dl_horizontal">
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descCase.SOD_XS_Area__c.label}">{! v.objDescriptionComponent.descCase.SOD_XS_Area__c.label + ':' }</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objCase.SOD_XS_Area__c}">{! v.objCaseDataComponent.objCase.SOD_XS_Area__c}</p>
+                                </dd>
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descCase.SOD_XS_Motivo__c.label}">{! v.objDescriptionComponent.descCase.SOD_XS_Motivo__c.label + ':' }</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objCase.SOD_XS_Motivo__c}">{! v.objCaseDataComponent.objCase.SOD_XS_Motivo__c}</p>
+                                </dd>
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descCase.SOD_XS_Submotivo__c.label}">{! v.objDescriptionComponent.descCase.SOD_XS_Submotivo__c.label + ':' }</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objCase.SOD_XS_Submotivo__c}">{! v.objCaseDataComponent.objCase.SOD_XS_Submotivo__c}</p>
+                                </dd>
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descCase.Description.label}">{! v.objDescriptionComponent.descCase.Description.label + ':' }</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objCase.Description}">{! v.objCaseDataComponent.objCase.Description}</p>
+                                </dd>
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descCase.SOD_XS_CentroCostoResponsable__c.label}">{! v.objDescriptionComponent.descCase.SOD_XS_CentroCostoResponsable__c.label + ':' }</p>
+                                </dt>
+                                <!-- CENTRO DE COSTO RESPONSABLE-->
+                                <aura:if isTrue="{! empty(v.objCaseDataComponent.objCCResponsable) == true}"> 
+                                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                        <p class="slds-truncate" title="{! v.objCaseDataComponent.objCase.SOD_XS_CentroCostoResponsable__c}">{! v.objCaseDataComponent.objCase.SOD_XS_CentroCostoResponsable__c}</p>
+                                    </dd>
+                                    <aura:set attribute="else">
+                                    <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                        <p class="slds-truncate" title="{! v.objCaseDataComponent.objCCResponsable.Name}">{! v.objCaseDataComponent.objCCResponsable.Name}</p>
+                                    </dd>
+                                    </aura:set>
+                                </aura:if>
+                                <!-- FIN CENTRO DE COSTO RESPONSABLE-->
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descCase.SOD_XS_TiendaVende__c.label}">{! v.objDescriptionComponent.descCase.SOD_XS_TiendaVende__c.label + ':' }</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objShopThatSell.Name}">{! v.objCaseDataComponent.objShopThatSell.Name}</p>
+                                </dd>
+                            </dl>
+                        </lightning:tile>
+                    </div>
+                    <div class="slds-col slds-size_2-of-12"></div>
+                    <!-- CASO: Detalle-->
+                    <!-- DOCUMENTOS: ENCABEZADO-->
+                    <div class="slds-col slds-size_12-of-12">
+                        <br/>
+                        <h4 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" 
+                                    title="Section Title">{!$Label.c.SOD_XS_V360CASE_ResumenDetalleDocumentos}</span>
+                        </h4>
+                    </div>
+                    <!-- DOCUMENTOS: ENCABEZADO-->
+                    <!-- DOCUMENTOS: DETALLE DV-->
+                    <!-- IF PURCHASE IS PROJECT -->
+                    <div class="slds-col slds-size_2-of-12"></div>
+                    <aura:if isTrue="{! v.objCaseDataComponent.strObjectType == 'SSP_PRJ' }">
+                        <div class="slds-col slds-size_2-of-12"></div>
+                    </aura:if>
+                    <!-- IF PURCHASE IS SUBPROJECT -->
+                    <aura:if isTrue="{! v.objCaseDataComponent.strObjectType == 'SSP_SUBP' }">
+                    <div class="slds-col slds-size_5-of-12">
+                        <lightning:tile label="{! v.objDescriptionComponent.objDocV}">
+                            <aura:set attribute="media">
+                                <lightning:icon iconName="utility:summary"/>
+                            </aura:set>
+                            <dl class="slds-dl_horizontal">
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descDocV.Name.label}">{! v.objDescriptionComponent.descDocV.Name.label + ':'}</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objSellDoc.Name}">{! v.objCaseDataComponent.objSellDoc.Name}</p>
+                                </dd>
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descDocV.SOD_XS_TipoDeDdocumento__c.label}">{! v.objDescriptionComponent.descDocV.SOD_XS_TipoDeDdocumento__c.label + ':'}</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objSellDoc.SOD_XS_TipoDeDdocumento__c}">{! v.objCaseDataComponent.objSellDoc.SOD_XS_TipoDeDdocumento__c}</p>
+                                </dd>
+                            </dl>
+                        </lightning:tile>
+                    </div>
+                    </aura:if>
+                    <!-- DOCUMENTOS: DETALLE DV-->
+                    <!-- DOCUMENTOS: DETALLE DA-->
+                    <div class="slds-col slds-size_5-of-12">
+                        <lightning:tile label="{! v.objDescriptionComponent.objDocA}">
+                            <aura:set attribute="media">
+                                <lightning:icon iconName="utility:cart"/>
+                            </aura:set>
+                            <dl class="slds-dl_horizontal">
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descDocA.Name.label}">{! v.objDescriptionComponent.descDocA.Name.label + ':'}</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objAsocDoc.Name}">{! v.objCaseDataComponent.objAsocDoc.Name}</p>
+                                </dd>
+                                <dt class="slds-dl_horizontal__label">
+                                    <p class="slds-truncate" title="{! v.objDescriptionComponent.descDocA.SOD_XS_TipoDeDdocumento__c.label}">{! v.objDescriptionComponent.descDocA.SOD_XS_TipoDeDdocumento__c.label + ':'}</p>
+                                </dt>
+                                <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                    <p class="slds-truncate" title="{! v.objCaseDataComponent.objAsocDoc.SOD_XS_TipoDeDdocumento__c}">{! v.objCaseDataComponent.objAsocDoc.SOD_XS_TipoDeDdocumento__c}</p>
+                                </dd>
+                            </dl>
+                        </lightning:tile>
+                    </div>
+                    <!-- DOCUMENTOS: DETALLE DA-->
+                    <!-- RESERVAS: ENCABEZADO-->
+                    <!-- IF PURCHASE IS SUBPROJECT -->
+                    <aura:if isTrue="{! v.objCaseDataComponent.strObjectType == 'SSP_SUBP' }">
+                    <div class="slds-col slds-size_12-of-12">
+                        <br/>
+                        <h4 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" 
+                                    title="Section Title">{!$Label.c.SOD_XS_V360CASE_ResumenDetalleReservas}</span>
+                        </h4>
+                    </div>
+                    </aura:if>
+                    <!-- RESERVAS: ENCABEZADO-->
+                    <!-- RESERVAS: ITERACION-->
+                    <div class="slds-col slds-size_12-of-12">
+                        <!-- GRID Subproject -->
+                        <div class="slds-grid slds-gutters_direct slds-wrap">
+                            <!-- iteration -->
+                            <aura:iteration items="{!v.objCaseDataComponent.lstReserves}" var="reserve">
+                                <!-- IF PURCHASE IS SUBPROJECT -->
+                                <aura:if isTrue="{! v.objCaseDataComponent.strObjectType == 'SSP_SUBP' }">
+                                <!-- Subproject Panel-->
+                                <div class="slds-col slds-size_6-of-12">
+                                    <lightning:tile label="{! v.objDescriptionComponent.objReserve }">
+                                        <aura:set attribute="media">
+                                            <lightning:icon iconName="utility:cart"/>
+                                        </aura:set>
+                                        <dl class="slds-dl_horizontal">
+                                            <dt class="slds-dl_horizontal__label">
+                                                <p class="slds-truncate" title="{! v.objDescriptionComponent.descReserve.Name.label}">{! v.objDescriptionComponent.descReserve.Name.label + ':'}</p>
+                                            </dt>
+                                            <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                                <p class="slds-truncate" title="{!reserve.objReserve.Name}">{!reserve.objReserve.Name}</p>
+                                            </dd>
+                                        </dl>
+                                        <dl class="slds-dl_horizontal">
+                                            <dt class="slds-dl_horizontal__label">
+                                                <p class="slds-truncate" title="{! v.objDescriptionComponent.descReserve.SOD_XS_Servicio__c.label}">{! v.objDescriptionComponent.descReserve.SOD_XS_Servicio__c.label}:</p>
+                                            </dt>
+                                            <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                                <p class="slds-truncate" title="{!reserve.objReserve.SOD_XS_Servicio__c}">{!reserve.objReserve.SOD_XS_Servicio__c}</p>
+                                            </dd>
+                                        </dl>
+                                        <dl class="slds-dl_horizontal">
+                                            <dt class="slds-dl_horizontal__label">
+                                                <p class="slds-truncate" title="{! v.objDescriptionComponent.descReserve.SOD_XS_TipoCanasto__c.label}">{! v.objDescriptionComponent.descReserve.SOD_XS_TipoCanasto__c.label}:</p>
+                                            </dt>
+                                            <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                                <p class="slds-truncate" title="{!reserve.objReserve.SOD_XS_TipoCanasto__c}">{!reserve.objReserve.SOD_XS_TipoCanasto__c}</p>
+                                            </dd>
+                                        </dl>
+                                        <dl class="slds-dl_horizontal">
+                                            <dt class="slds-dl_horizontal__label">
+                                                <p class="slds-truncate" title="{! v.objDescriptionComponent.descReserve.SOD_XS_Estado__c.label}">{! v.objDescriptionComponent.descReserve.SOD_XS_Estado__c.label}:</p>
+                                            </dt>
+                                            <dd class="slds-dl_horizontal__detail slds-tile__meta">
+                                                <p class="slds-truncate" title="{!reserve.objReserve.SOD_XS_Estado__c }">{!reserve.objReserve.SOD_XS_Estado__c }</p>
+                                            </dd>
+                                        </dl>
+                                    </lightning:tile>
+                                </div>
+                                </aura:if>
+                                <!-- IF CONSULTA RECORD TYPE SELECTED -->
+                                <aura:if isTrue="{! v.objCaseDataComponent.boolRecordTypeConsultaSelected == false }">
+                                <div class="slds-col slds-size_6-of-12"></div>
+
+                                <!-- Products Panel-->
+                                <div class="slds-col slds-size_1-of-12"></div>
+                                <div class="slds-col slds-size_9-of-12">
+                                    <!-- Product Table -->
+                                    <aura:if isTrue="{! reserve.lstProducts.length > 0 }">
+                                        <div style="height: 120px; ">
+                                            <lightning:datatable aura:id="datatable1"
+                                                                keyField="SOD_XS_CodigoProducto__c"
+                                                                hideCheckboxColumn="true"
+                                                                showRowNumberColumn="false"
+                                                                columns="{! v.objDescriptionComponent.descProduct }"
+                                                                data="{!reserve.lstProducts }"
+                                                                />
+                                        </div>
+                                        <aura:set attribute="else">
+                                            <div style="height: 30px; "><b>{! $Label.c.SOD_XS_V360CASE_ResumenDetalleNoProductos}</b></div>
+                                        </aura:set>
+                                    </aura:if>
+                                    <!-- Product Table -->
+                                </div>
+                                <!-- Products Panel-->
+                                </aura:if>
+                                <!-- IF CONSULTA RECORD TYPE SELECTED -->
+                            
+                            </aura:iteration>
+                        </div>
+                        <!-- GRID Subproject -->
+                    </div>
+                    <!-- RESERVAS: ITERACION-->
+
+                </div>
+                <!-- GRID -->
+                </aura:if>
+            </div>
+
+            <!--footer-->
+            <footer class="slds-modal__footer">                    
+                <lightning:button onclick="{! c.handleCancelButton }" 
+                                    label="{! $Label.c.SOD_XS_V360CASE_BotonCancelar }"
+                                    iconName="utility:back" 
+                                    iconPosition="left" 
+                                    variant="brand"/>
+                <lightning:button onclick="{! c.handleCreateButton }" 
+                                    label="{! $Label.c.SOD_XS_V360CASE_BotonCasos }"
+                                    title="Se crea un nuevo caso con la informaci�n mostrada"
+                                    iconName="utility:case" 
+                                    iconPosition="right" 
+                                    variant="brand"
+                                    disabled="{! !v.objCaseDataComponent.boolRecordCompleted }"/>
+            </footer>
+        </div>
+    </div>
+    </aura:if>
+
+    <div aura:id="backdrop" class="slds-backdrop slds-backdrop_open"></div>
+
+</aura:component>
