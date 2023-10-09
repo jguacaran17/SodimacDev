@@ -37,7 +37,7 @@ public with sharing class SOD_XS_360ViewPurchasesController_TEST {
         PRV_STR_PATH_LAST10 = '/360View?fields=purchaseOrders&pageNumber=1&pageSize=10';
         PRV_STR_PATH_DATEFILTER = '/360View?fields=purchaseOrders&pageNumber=1&pageSize=10&purchaseDateFilter=';
         PRV_STR_PATH_DATEFILTER_PO_PV = '/360View?fields=purchaseOrders,paymentVouchers&pageNumber=1&pageSize=10&purchaseDateFilter=';
-        PRV_STR_DATEFROM = '23-02-2018';
+        PRV_STR_DATEFROM = '23-02-2019';
         PRV_STR_DATETO = '23-06-2018';
         PRV_STR_PATH_ORDER = '?fields=purchaseOrders&purchaseOrderNumber=';
         PRV_STR_PATH_SLSDOC = '?fields=purchaseOrders&salesDocumentFilter=';
